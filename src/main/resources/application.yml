@@ -1,0 +1,14 @@
+server:
+  port: 5658
+
+#mybatis.config-location: classpath:META-INF/mybatis-config.xml
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: mapping/*Mapper.xml
+  type-aliases-package: com.springboot.**.domain
+
+spring:
+  profiles:
+    active: fkfb

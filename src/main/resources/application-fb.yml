@@ -1,0 +1,45 @@
+sharding:
+  jdbc:
+    dataSource:
+      names: db-test0,db-test1,db-test2
+      db-test0: #org.apache.tomcat.jdbc.pool.DataSource
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.139.128:3306/cool?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&useSSL=false&serverTimezone=GMT
+        username: root
+        password: liwenchao..
+        maxPoolSize: 20
+      db-test1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.139.132:3306/cool?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT
+        username: root
+        password: liwenchao..
+        maxPoolSize: 20
+      db-test2:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.139.133:3306/cool?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT
+        username: root
+        password: liwenchao..
+        maxPoolSize: 20
+    #  读写分离配置
+    #    config:
+    #      masterslave:
+    #        load-balance-algorithm-type: round_robin
+    #        name: db1s2
+    #        master-data-source-name: db-test0
+    #        slave-data-source-names: db-test1,db-test2
+    props:
+      sql:
+        show: true
+
+    #数据分表配置
+sharding.jdbc.config.sharding.tables.user.actual-data-nodes: ds_0.user_$->{0..3}
+sharding.jdbc.config.sharding.tables.user.table-strategy.standard.sharding-column: id
+sharding.jdbc.config.sharding.tables.user.table-strategy.standard.precise-algorithm-class-name: com.springboot.shardingjdbcmasterslave.config.MyPreciseShardingAlgorithm
+#sharding.jdbc.config.sharding.tables.user.table-strategy.inline.sharding-column=id
+#sharding.jdbc.config.sharding.tables.user.table-strategy.inline.algorithm-expression=user_${id.longValue() % 4}
+
+sharding.jdbc.config.sharding.master-slave-rules.ds_0.master-data-source-name: db-test0
+sharding.jdbc.config.sharding.master-slave-rules.ds_0.slave-data-source-names: db-test1,db-test2

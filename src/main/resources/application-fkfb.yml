@@ -1,0 +1,68 @@
+sharding:
+  jdbc:
+    datasource:
+      names: ds-master-0,ds-master-1,ds-master-0-slave-0,ds-master-0-slave-1,ds-master-1-slave-0,ds-master-1-slave-1
+      ds-master-0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.139.128:3306/cool?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&useSSL=false&serverTimezone=GMT
+        username: root
+        password: liwenchao..
+        maxPoolSize: 20
+      ds-master-1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.139.128:3306/cool2?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&useSSL=false&serverTimezone=GMT
+        username: root
+        password: liwenchao..
+        maxPoolSize: 20
+      ds-master-0-slave-0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.139.128:3306/cool?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&useSSL=false&serverTimezone=GMT
+        username: root
+        password: liwenchao..
+        maxPoolSize: 20
+      ds-master-0-slave-1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.139.128:3306/cool?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&useSSL=false&serverTimezone=GMT
+        username: root
+        password: liwenchao..
+        maxPoolSize: 20
+      ds-master-1-slave-0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.139.128:3306/cool2?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&useSSL=false&serverTimezone=GMT
+        username: root
+        password: liwenchao..
+        maxPoolSize: 20
+      ds-master-1-slave-2:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.139.128:3306/cool2?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&useSSL=false&serverTimezone=GMT
+        username: root
+        password: liwenchao..
+        maxPoolSize: 20
+    config:
+      sharding:
+        defaultDatabaseStrategy:
+          inline:
+            shardingColumn: id
+            algorithm-expression: ds_$->{id % 2}
+        tables:
+          user:
+            actualDataNodes: ds_$->{0..1}.user_$->{0..4}
+            tableStrategy:
+              inline:
+                shardingColumn: id
+                algorithmExpression: user_$->{id % 5}
+            key-generatorColumn-name: id
+        master-slave-rules:
+          ds_0:
+            masterDataSourceName: ds-master-0
+            slaveDataSourceNames: ds-master-0-slave-0, ds-master-0-slave-1
+          ds_1:
+            masterDataSourceName: ds-master-1
+            slaveDataSourceNames: ds-master-1-slave-0, ds-master-1-slave-1
+
