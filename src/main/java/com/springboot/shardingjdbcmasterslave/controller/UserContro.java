@@ -16,22 +16,29 @@ public class UserContro {
     UserService userService;
 
     @RequestMapping("/user")
-    public Object list(){
+    public Object list() {
         return userService.list();
     }
 
     @RequestMapping("/list")
-    public Object addUser(@RequestParam Integer id, @RequestParam String username, @RequestParam String  password){
-
-        for (int i=100;i<150;i++) {
+    public Object addUser(@RequestParam Integer id, @RequestParam String username, @RequestParam String password) {
+        /*分表，分库分表*/
+//        for (int i = 100; i < 150; i++) {
+//            User user = User.builder()
+//                    .id(i)
+//                    .username(username + i)
+//                    .password(password)
+//                    .build();
+//            long resutl = userService.addUser(user);
+//            log.info("insert:" + user.toString() + " result:" + resutl);
+//        }
+        /*读写分离*/
             User user = User.builder()
-                    .id(i)
-                    .username(username + i)
+                    .id(id)
+                    .username(username)
                     .password(password)
                     .build();
-            long resutl = userService.addUser(user);
-            log.info("insert:"+user.toString()+" result:"+resutl);
-        }
+            userService.addUser(user);
         return "ok";
     }
 
